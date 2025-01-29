@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker, InfoWindow, HeatmapLayer } from "@react-google-maps/api";
+import axios from "axios";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 
-const MapDisplay = ({ recordings, setRecordings }) => {
+const MapDisplay = () => {
+  const [recordings, setRecordings] = useState([]);
   const [selectedRecording, setSelectedRecording] = useState(null);
   const [mapRef, setMapRef] = useState(null);
   const [mapType, setMapType] = useState("roadmap");
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [googleInstance, setGoogleInstance] = useState(null); // Store the Google Maps API instance
 
   const mapContainerStyle = {
     width: "100%",
@@ -21,6 +23,20 @@ const MapDisplay = ({ recordings, setRecordings }) => {
   };
 
   const newDelhiCenter = { lat: 28.6139, lng: 77.209 };
+
+  // Fetch recordings from the backend
+  useEffect(() => {
+    const fetchRecordings = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/recordings");
+        setRecordings(response.data);
+      } catch (error) {
+        console.error("Error fetching recordings:", error);
+      }
+    };
+
+    fetchRecordings();
+  }, []);
 
   const handleRecenterToNewDelhi = () => {
     if (mapRef) {
@@ -45,30 +61,14 @@ const MapDisplay = ({ recordings, setRecordings }) => {
     setShowHeatmap((prev) => !prev);
   };
 
-  const heatmapData = recordings.map((rec) => ({
-    location: new window.google.maps.LatLng(rec.latitude, rec.longitude),
-    weight: 1,
-  }));
-
-  const handleLocationChange = (field, value) => {
-    if (selectedRecording) {
-      setSelectedRecording({
-        ...selectedRecording,
-        [field]: parseFloat(value),
-      });
-    }
-  };
-
-  const handleUpdateRecording = () => {
-    if (selectedRecording) {
-      const updatedRecordings = recordings.map((rec) =>
-        rec.id === selectedRecording.id ? selectedRecording : rec
-      );
-
-      setRecordings(updatedRecordings); // Update recordings in parent state
-      setSelectedRecording(null); // Close the InfoWindow
-    }
-  };
+  // Generate heatmap data based on fetched locations
+  const heatmapData =
+    googleInstance &&
+    recordings.length > 0 &&
+    recordings.map(
+      (rec) =>
+        new googleInstance.maps.LatLng(rec.latitude, rec.longitude) // Create LatLng objects
+    );
 
   return (
     <Box sx={{ marginTop: "20px", padding: "20px" }}>
@@ -105,7 +105,11 @@ const MapDisplay = ({ recordings, setRecordings }) => {
           {showHeatmap ? "Hide Heatmap" : "Show Heatmap"}
         </Button>
       </Box>
-      <LoadScript googleMapsApiKey="AIzaSyAxEYPIcz4RCV2q6VC3JbMmTQahq9yVaG4" libraries={["visualization"]}>
+      <LoadScript
+        googleMapsApiKey="AIzaSyAxEYPIcz4RCV2q6VC3JbMmTQahq9yVaG4"
+        libraries={["visualization"]} // Add visualization library for HeatmapLayer
+        onLoad={(google) => setGoogleInstance(google)}
+      >
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={
@@ -117,18 +121,18 @@ const MapDisplay = ({ recordings, setRecordings }) => {
           onLoad={(map) => setMapRef(map)}
           mapTypeId={mapType}
         >
-          {showHeatmap && (
+          {showHeatmap && heatmapData && (
             <HeatmapLayer
               data={heatmapData}
               options={{
-                radius: 20,
-                opacity: 0.7,
+                radius: 20, // Radius of the heatmap points
+                opacity: 0.7, // Transparency of the heatmap
               }}
             />
           )}
           {recordings.map((rec) => (
             <Marker
-              key={rec.id}
+              key={rec._id}
               position={{ lat: rec.latitude, lng: rec.longitude }}
               onClick={() => setSelectedRecording(rec)}
             />
@@ -161,26 +165,6 @@ const MapDisplay = ({ recordings, setRecordings }) => {
                 >
                   Get Directions in Google Maps
                 </Link>
-                <Typography variant="subtitle2" sx={{ marginBottom: "10px" }}>
-                  Update Location
-                </Typography>
-                <TextField
-                  label="Latitude"
-                  value={selectedRecording.latitude}
-                  onChange={(e) => handleLocationChange("latitude", e.target.value)}
-                  fullWidth
-                  sx={{ marginBottom: "10px" }}
-                />
-                <TextField
-                  label="Longitude"
-                  value={selectedRecording.longitude}
-                  onChange={(e) => handleLocationChange("longitude", e.target.value)}
-                  fullWidth
-                  sx={{ marginBottom: "10px" }}
-                />
-                <Button variant="contained" color="primary" onClick={handleUpdateRecording}>
-                  Update Location
-                </Button>
               </Box>
             </InfoWindow>
           )}

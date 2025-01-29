@@ -14,6 +14,7 @@ const App = () => {
 
   return (
     <div>
+      
       <VideoRecorder onRecordingComplete={handleNewRecording} />
       <MapDisplay recordings={recordings} setRecordings={setRecordings} /> {/* Pass setRecordings */}
     </div>
