@@ -1,20 +1,31 @@
-import React from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+// Navbar.js
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { useAuth } from './Authcontext';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#1976d2", boxShadow: "none" }}>
+    <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-          <LocationOnIcon />
-        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Geo Video Recorder
+          Video Reporting System
         </Typography>
+        {user ? (
+          <Button color="inherit" onClick={logout}>
+            Logout
+          </Button>
+        ) : (
+          <>
+            <Button color="inherit" component={Link} to="/login">
+              Login
+            </Button>
+            <Button color="inherit" component={Link} to="/signup">
+              Signup
+            </Button>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );
