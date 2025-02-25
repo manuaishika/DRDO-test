@@ -17,7 +17,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/login', credentials);
+      const response = await axios.post('https://drdo-backend-1.onrender.com/login', credentials);
       login(response.data.token);
       navigate('/');
     } catch (err) {

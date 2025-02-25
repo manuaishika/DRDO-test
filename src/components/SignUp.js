@@ -16,7 +16,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8000/signup', formData);
+      await axios.post('https://drdo-backend-1.onrender.com/signup', formData);
       navigate('/login'); // Redirect to login after successful signup
     } catch (err) {
       setError(err.response?.data?.error || 'Signup failed');

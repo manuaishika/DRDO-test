@@ -76,7 +76,7 @@ const VideoRecorder = ({ fetchRecordings }) => {
       formData.append("time", recordingTime);
 
       setStatus("Uploading recording...");
-      await axios.post("http://localhost:8000/upload", formData);
+      await axios.post("https://drdo-backend-1.onrender.com/upload", formData);
       setStatus("Recording uploaded successfully!");
       fetchRecordings();
     } catch (error) {

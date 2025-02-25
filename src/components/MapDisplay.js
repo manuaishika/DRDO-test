@@ -28,7 +28,7 @@ const MapDisplay = () => {
   useEffect(() => {
     const fetchRecordings = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/recordings");
+        const response = await axios.get("https://drdo-backend-1.onrender.com/recordings");
         setRecordings(response.data);
       } catch (error) {
         console.error("Error fetching recordings:", error);
