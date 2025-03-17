@@ -74,7 +74,7 @@ const Login = () => {
         <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.6)' }}>
           Dummy Login Details
         </Typography>
-        <Typography>👤 <strong>Phone Number:</strong> +918826417060</Typography>
+        <Typography>👤 <strong>Phone Number:</strong> <br></br> +918826417060</Typography>
         <Typography>🔑 <strong>Password:</strong> <br></br> 123456</Typography>
       </Paper>
     </Box>
