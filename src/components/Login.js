@@ -1,8 +1,7 @@
-// Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Box, Button, TextField, Typography, Link } from '@mui/material';
+import { Box, Button, TextField, Typography, Link, Paper } from '@mui/material';
 import { useAuth } from './Authcontext';
 
 const Login = () => {
@@ -54,6 +53,30 @@ const Login = () => {
       <Typography sx={{ mt: 2 }}>
         Don't have an account? <Link href="/signup">Sign up here</Link>
       </Typography>
+
+      {/* Dummy Login Details (Styled using MUI) */}
+      <Paper
+        elevation={3}
+        sx={{
+          position: 'fixed',
+          right: 16,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          backgroundColor: 'rgba(200, 200, 200, 0.3)',
+          padding: 2,
+          borderRadius: 2,
+          boxShadow: 3,
+          color: 'rgba(0, 0, 0, 0.5)',
+          fontSize: '0.9rem',
+          width: 220
+        }}
+      >
+        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.6)' }}>
+          Dummy Login Details
+        </Typography>
+        <Typography>👤 <strong>Phone Number:</strong> +918826417060</Typography>
+        <Typography>🔑 <strong>Password:</strong> <br></br> 123456</Typography>
+      </Paper>
     </Box>
   );
 };
