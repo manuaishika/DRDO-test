@@ -1,3 +1,7 @@
+# DRDO Test Interface
+
+A testing and simulation interface built for the DRDO Video Reporting System. This project focuses on generating mock Aadhaar-based citizen data to simulate user inputs, aiding the backend testing and visualization pipeline during development.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
